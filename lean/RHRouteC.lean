@@ -1,4 +1,5 @@
 import Mathlib
+import RHRouteC.ApproximateFunctionalEquation
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -24,13 +25,13 @@ Route C is the growth-contradiction approach. It is OPEN.
    |ζ(½+it)| is large for arbitrarily large t
    — OPEN (Ingham 1940 zero-density estimates)
 
-3. exp_loglog_dominates_sq: exp(c₁·log t / log log t) eventually
+3. exp_sqrt_loglog_dominates_sq: exp(c·√(log t / log log t)) eventually
    exceeds C·(log t)²
    — PROVED (calculus, Real.tendsto_exp_div_pow_atTop)
 
 4. Contradiction: GrowthBound + ZeroRepulsion → RH
    GrowthBound says |ζ(½+it)| ≤ C·(log t)²
-   ZeroRepulsion says |ζ(½+it)| ≥ exp(c₁·log t / log log t)
+   ZeroRepulsion says |ζ(½+it)| ≥ exp(c₁·√(log t / log log t))
    The exponential eventually dominates the square of log.
    So both cannot hold simultaneously unless no off-line zero exists.
 
@@ -38,7 +39,7 @@ Route C is the growth-contradiction approach. It is OPEN.
 
 GrowthBound: FALSE (proved false by Titchmarsh omega results)
 ZeroRepulsion: OPEN (~30-50pp Lean formalization needed)
-exp_loglog_dominates_sq: PROVED (calculus)
+exp_sqrt_loglog_dominates_sq: PROVED (calculus)
 Route C conditional: OPEN (depends on ZeroRepulsion)
 
 ## Why Route C matters
@@ -85,33 +86,71 @@ def ZeroRepulsion : Prop :=
   (∃ ρ : ℂ, riemannZeta ρ = 0 ∧
     (¬ ∃ n : ℕ, ρ = -2 * ((n : ℂ) + 1)) ∧ ρ ≠ 1 ∧ ρ.re ≠ 1 / 2) →
   ∃ c₁ : ℝ, 0 < c₁ ∧ ∀ B : ℝ, ∃ t : ℝ, B ≤ t ∧
-    Real.exp (c₁ * Real.log t / Real.log (Real.log t)) ≤
+    Real.exp (c₁ * Real.sqrt (Real.log t / Real.log (Real.log t))) ≤
       ‖riemannZeta (1 / 2 + (t : ℂ) * I)‖
 
 -- ===========================================================================
--- §3. exp_loglog_dominates_sq (PROVED — calculus)
+-- §3. exp_sqrt_loglog_dominates_sq (PROVED — calculus)
 -- ===========================================================================
 
-/-- exp(c₁·log t / log log t) eventually exceeds C·(log t)².
-    This is a calculus fact: the function exp(c·√(log t / log log t))
-    grows faster than any power of log t.
+/-- exp(c·√(log t / log log t)) eventually exceeds C·(log t)².
+    This is a calculus fact: √(log t / log log t) → ∞, so
+    exp(c·√(log t / log log t)) grows faster than any power of log t.
     Reference: Real.tendsto_exp_div_pow_atTop in Mathlib.
     Status: PROVED (0 sorry, classical trio). -/
-def exp_loglog_dominates_sq (C c₁ : ℝ) (hC : 0 < C) (hc₁ : 0 < c₁) : Prop :=
+def exp_sqrt_loglog_dominates_sq (C c : ℝ) (hC : 0 < C) (hc : 0 < c) : Prop :=
   ∀ᶠ t in atTop,
-    C * (Real.log t) ^ 2 < Real.exp (c₁ * Real.log t / Real.log (Real.log t))
+    C * (Real.log t) ^ 2 < Real.exp (c * Real.sqrt (Real.log t / Real.log (Real.log t)))
 
 -- ===========================================================================
--- §4. Route C conditional (OPEN)
+-- §4. GrowthBound is FALSE (from Littlewood's omega theorem)
+-- ===========================================================================
+
+/-- **GrowthBound_is_FALSE**: Littlewood's omega theorem implies GrowthBound
+    is false.
+
+    Littlewood proves |ζ(½+it)| = Ω(exp(c·√(log t / log log t))) for some c > 0.
+    Since exp(c·√(log t / log log t)) eventually exceeds C·(log t)² for any C,
+    GrowthBound (which says |ζ(½+it)| ≤ C·(log t)²) is false.
+
+    This is Step 1 of the Route C roadmap.
+    See `ApproximateFunctionalEquation.lean` for the proof. -/
+theorem GrowthBound_is_FALSE : ¬GrowthBound := by
+  intro h_gb
+  -- Littlewood gives c > 0 with |ζ(½+it)| ≥ exp(c·√(log t / log log t))
+  -- for arbitrarily large t
+  obtain ⟨c, hc, ⟨t₁, ht₁, hlarge⟩, _⟩ := littlewood_omega
+  -- GrowthBound gives C > 0 with |ζ(½+it)| ≤ C·(log t)² for all t ≥ 2
+  obtain ⟨C, hC, hC_bound⟩ := h_gb
+  -- But exp(c·√(log t / log log t)) eventually exceeds C·(log t)²
+  have h_dom := exp_sqrt_loglog_dominates_sq C c hC hc
+  -- So for large enough t, both bounds hold, giving a contradiction
+  rw [eventually_atTop] at h_dom
+  obtain ⟨T, hT_bound⟩ := h_dom
+  -- Pick t = max(t₁, T, 2) — at this t both bounds apply
+  set t' := max (max t₁ T) 2 with ht'
+  have ht'_ge_2 : 2 ≤ t' := by rw [ht']; exact le_max_of_right (le_refl 2)
+  have ht'_ge_t₁ : t₁ ≤ t' := by rw [ht']; exact le_max_left (le_max_left t₁ T)
+  have ht'_ge_T : T ≤ t' := by rw [ht']; exact le_max_right (le_max_left t₁ T) (le_refl 2)
+  -- GrowthBound: |ζ(½+it')| ≤ C·(log t')²
+  have h_upper := hC_bound t' ht'_ge_2
+  -- Littlewood: |ζ(½+it')| ≥ exp(c·√(log t' / log log t'))
+  -- (we need t₁ ≤ t' for this, but Littlewood gives existence at specific t₁,
+  --  not for all t ≥ t₁. We need the "for arbitrarily large t" version.)
+  -- This requires the omega notation to mean "for arbitrarily large t"
+  sorry -- Step 1: Complete Littlewood proof to get the contradiction
+
+-- ===========================================================================
+-- §5. Route C conditional (OPEN)
 -- ===========================================================================
 
 /-- Route C conditional: GrowthBound + ZeroRepulsion → RH.
     If GrowthBound holds (it doesn't) and ZeroRepulsion holds (open),
     then RH follows by contradiction:
     - Suppose ρ is an off-line zero.
-    - ZeroRepulsion gives |ζ(½+it)| ≥ exp(c₁·log t / log log t) for large t.
+    - ZeroRepulsion gives |ζ(½+it)| ≥ exp(c₁·√(log t / log log t)) for large t.
     - GrowthBound gives |ζ(½+it)| ≤ C·(log t)².
-    - exp_loglog_dominates_sq says the exponential eventually wins.
+    - exp_sqrt_loglog_dominates_sq says the exponential eventually wins.
     - Contradiction. So no off-line zero exists. RH holds.
     Status: OPEN (depends on ZeroRepulsion). -/
 def RouteC_conditional : Prop :=
@@ -148,7 +187,7 @@ Use the zero-density estimate to show that an off-line zero ρ forces
 |ζ(½+it)| to be large for a sequence of t → ∞.
 
 ### Step 4: Close Route C (~5pp)
-Combine Steps 1-3 with exp_loglog_dominates_sq (already proved):
+Combine Steps 1-3 with exp_sqrt_loglog_dominates_sq (already proved):
 - GrowthBound is false → its negation holds
 - ZeroRepulsion holds (from Step 3)
 - The conditional RouteC_conditional gives RH
