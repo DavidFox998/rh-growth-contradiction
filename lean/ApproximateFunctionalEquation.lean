@@ -1,17 +1,13 @@
-import Mathlib
-import Mathlib.Data.Complex.ExponentialBounds
+import Mathlib.Data.Complex.Exponential
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Asymptotics.AsymptoticEquivalent
 import Mathlib.NumberTheory.LSeries.RiemannZeta
-import Mathlib.Algebra.Squarefree.Basic
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Data.Complex.Exponential
+import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.RCLike.Basic
 
 /-!
 # RH Route C — Approximate Functional Equation for ζ(s)
@@ -54,50 +50,55 @@ theorem riemannZeta_eq_chi_one_sub (s : ℂ) :
 theorem chi_mul_chi_one_sub (s : ℂ) :
     chi s * chi (1 - s) = 1 := by
   unfold chi
-  -- (2π)^{-s} · (2π)^{-(1-s)} = (2π)^{-1}
   have h_cpow : ((2 : ℂ) * ↑π) ^ (-s) * ((2 : ℂ) * ↑π) ^ (-(1 - s)) =
       ((2 : ℂ) * ↑π) ^ (-1 : ℂ) := by
-    rw [← cpow_add _ _ (by norm_num : (2 : ℂ) * ↑π ≠ 0)]
-    ring
-  -- Γ(s)·Γ(1-s) = π/sin(πs)
+    have h_add : (-s : ℂ) + (-(1 - s)) = -1 := by ring
+    rw [← Complex.cpow_add (2 * ↑π) (-s) (-(1 - s))
+        (by norm_num : (2 : ℂ) * ↑π ≠ 0), h_add]
   have h_gamma := Complex.Gamma_mul_Gamma_one_sub s
-  -- cos(π(1-s)/2) = sin(πs/2)
   have h_cos : Complex.cos (↑π * (1 - s) / 2) = Complex.sin (↑π * s / 2) := by
     have h : ↑π * (1 - s) / 2 = ↑π / 2 - ↑π * s / 2 := by ring
     rw [h, Complex.cos_pi_div_two_sub]
-  -- sin(πs) = 2·sin(πs/2)·cos(πs/2)
-  have h_sin : Complex.sin (↑π * s) = 2 * Complex.sin (↑π * s / 2) * Complex.cos (↑π * s / 2) := by
+  have h_sin : Complex.sin (↑π * s) =
+      2 * Complex.sin (↑π * s / 2) * Complex.cos (↑π * s / 2) := by
     rw [show ↑π * s = 2 * (↑π * s / 2) by ring]
     exact Complex.sin_two_mul _
-  -- Combine
-  rw [h_cpow, h_cos]
-  rw [← h_gamma]
-  rw [h_sin]
+  rw [h_cpow, h_cos, ← h_gamma, h_sin]
   field_simp
   ring
 
 -- ===========================================================================
--- §3. |χ(1/2 + it)| = 1
+-- §3. Conjugation and |χ(1/2 + it)| = 1
 -- ===========================================================================
+
+/-- Conjugation commutes through χ. -/
+theorem chi_conj (s : ℂ) : conj (chi s) = chi (conj s) := by
+  unfold chi
+  have harg : (2 * ↑π : ℂ).arg ≠ π := by
+    rw [Complex.arg_ofReal_of_nonneg (by positivity : 0 ≤ (2 : ℝ) * π)]
+    norm_num
+  rw [map_mul, map_mul, map_mul]
+  rw [Complex.conj_ofNat]
+  rw [← Complex.cpow_conj _ _ harg, Complex.conj_ofReal, Complex.conj_ofReal]
+  rw [Complex.Gamma_conj]
+  rw [Complex.cos_conj, map_mul, map_div, Complex.conj_ofNat, Complex.conj_ofReal,
+    Complex.conj_I]
+  ring
 
 /-- On the critical line, |χ(s)| = 1. -/
 theorem abs_chi_eq_one_on_critical_line (t : ℝ) :
     ‖chi (1/2 + (t : ℂ) * I)‖ = 1 := by
-  have h_prod : chi (1/2 + (t : ℂ) * I) * chi (1 - (1/2 + (t : ℂ) * I)) = 1 :=
-    chi_mul_chi_one_sub (1/2 + (t : ℂ) * I)
-  have h_conj : (1 : ℂ) - (1/2 + (t : ℂ) * I) = (1/2 + (-(t : ℂ)) * I) := by ring
-  rw [h_conj] at h_prod
-  -- Need: chi(conj s) = conj(chi s)
-  -- This follows from: conj(exp z) = exp(conj z), Gamma_conj, etc.
-  have h_chi_conj : chi (1/2 + (-(t : ℂ)) * I) = star (chi (1/2 + (t : ℂ) * I)) := by
-    unfold chi
-    -- conj commutes through: 2, (2π)^{-s}, Gamma(s), cos(πs/2)
-    sorry -- conj_commutes through chi — needs exp_conj, Gamma_conj
-  rw [h_chi_conj] at h_prod
-  have h_normSq : Complex.normSq (chi (1/2 + (t : ℂ) * I)) = 1 := by
-    rw [Complex.normSq_eq_conj_mul_self, ← h_prod]
-  rw [← Complex.mul_self_abs, h_normSq]
-  exact Real.sqrt_one
+  set s := 1/2 + (t : ℂ) * I
+  have h1 : chi s * chi (1 - s) = 1 := chi_mul_chi_one_sub s
+  have h2 : (1 - s : ℂ) = conj s := by
+    simp [Complex.conj_add, Complex.conj_mul, Complex.conj_ofReal, Complex.conj_I]
+    ring
+  rw [h2, ← chi_conj] at h1
+  have h_norm : ‖chi s‖ * ‖chi s‖ = 1 := by
+    have := congrArg norm h1
+    rwa [norm_mul, RCLike.norm_conj, norm_one] at this
+  have h_pos : 0 ≤ ‖chi s‖ := norm_nonneg _
+  nlinarith
 
 -- ===========================================================================
 -- §4. Dirichlet series and partial sums
@@ -110,9 +111,9 @@ theorem dirichletPartialSum_tendsto (s : ℂ) (hs : 1 < s.re) :
     Tendsto (fun N => dirichletPartialSum s N) atTop (nhds (riemannZeta s)) := by
   unfold dirichletPartialSum
   rw [← zeta_eq_tsum_one_div_nat_add_one_cpow hs]
-  simp only [cpow_neg, one_div]
-  exact tendsto_finset_sum_nat_tsum (fun n => (1 : ℂ) / ((n + 1 : ℕ) : ℂ) ^ s)
-    (summable_one_div_nat_add_one_cpow hs)
+  have hf : Summable (fun n => (1 : ℂ) / ((n + 1 : ℕ) : ℂ) ^ s) := by
+    simpa [cpow_neg, one_div] using Complex.summable_one_div_nat_add_one_cpow hs
+  exact (hf.hasSum).tendsto_sum_nat
 
 theorem dirichlet_tail_bound (s : ℂ) (hs : 1 < s.re) (N : ℕ) (hN : 1 ≤ N) :
     ‖riemannZeta s - dirichletPartialSum s N‖ ≤
@@ -123,7 +124,7 @@ theorem dirichlet_tail_bound (s : ℂ) (hs : 1 < s.re) (N : ℕ) (hN : 1 ≤ N) 
 -- §5. AFE remainder and main theorem
 -- ===========================================================================
 
-noncomputable def afe_remainder (s : ℂ) (N : ℕ) : ℂ :=
+def afe_remainder (s : ℂ) (N : ℕ) : ℂ :=
   riemannZeta s - (dirichletPartialSum s N + chi s * dirichletPartialSum (1 - s) N)
 
 theorem approximate_functional_equation
