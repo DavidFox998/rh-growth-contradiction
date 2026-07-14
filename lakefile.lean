@@ -9,3 +9,4 @@ require mathlib from git
 @[default_target]
 lean_lib RHRouteC where
   srcDir := "lean"
+  roots := #[`RHRouteC, `ApproximateFunctionalEquation]

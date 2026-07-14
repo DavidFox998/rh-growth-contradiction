@@ -1,5 +1,5 @@
 import Mathlib
-import RHRouteC.ApproximateFunctionalEquation
+import ApproximateFunctionalEquation
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.Calculus.Deriv.Basic
