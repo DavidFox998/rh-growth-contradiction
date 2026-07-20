@@ -27,7 +27,7 @@ This route uses no Arakelov geometry, no Langlands program, and no adelic
 volumes. It is pure classical analysis in the tradition of Littlewood,
 Ingham, and Titchmarsh.
 
----
+--- 
 
 ## Honest Ledger
 
