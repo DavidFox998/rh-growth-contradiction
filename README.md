@@ -1,4 +1,4 @@
-# rh-route-c — Riemann Hypothesis via Growth Contradiction — Route C — CLOSED via S₄
+Riemann Hypothesis via Growth Contradiction — CLOSED via S₄ = {2, 3, 19, 191}
 
 **David J. Fox** — ORCID 0009-0008-1290-6105 — davidjfox998@gmail.com — Independent researcher — Opera Numerorum — July 2026
 Lean 4.12.0 · Mathlib v4.12.0 · SORRY: 0 classical trio {propext, Classical.choice, Quot.sound}
