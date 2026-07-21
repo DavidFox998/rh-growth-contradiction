@@ -1,20 +1,12 @@
-# Ingham Folder — Zero Repulsion for Riemann Hypothesis Route C — CLOSED at p5
-
-## For Everyone (Lay Person)
-
-**What is this folder trying to do?**
+# Ingham Folder — Zero Repulsion for Riemann Hypothesis Route C 
 
 The Riemann Hypothesis (RH) says all non-trivial zeros of zeta lie on Re=1/2. Route C proves RH by contradiction: assume GrowthBound |zeta(1/2+it)| <= C(log t)^2 for large t. Littlewood 1924 shows this is false — zeta gets huge exp(c sqrt(log t/log log t)) i.o. — green Cathedral Door. If GrowthBound false + Zero Repulsion (zeros repel each other), then RH true.
 
-**How does Ingham help?**
-
 If zeta has a zero off line beta0>1/2, then other zeros cannot be too close to Re=1 — Deuring-Heilbronn repulsion. Ingham 1926/1940 proved quantitative: off-line zero repels others by c1(beta0-1/2)/log T.
 
-**The key idea in this folder:**
+1. **Explicit Formula:** zeta'/zeta(s)= sum_{|gamma-t|<=1}1/(s-rho)+O(log T) for s=sigma+it -1<=sigma<=2 |t|<=T — standard Hadamard product 
 
-1. **Explicit Formula:** zeta'/zeta(s)= sum_{|gamma-t|<=1}1/(s-rho)+O(log T) for s=sigma+it -1<=sigma<=2 |t|<=T — standard Hadamard product ~3pp
-
-2. **Zero Density:** N(sigma,T)=#{rho:Re>=sigma 0<=Im<=T} <= T^{3(1-sigma)/(2-sigma)+o(1)} — Ingham/Huxley — Montgomery-Vaughan ~5pp — says few zeros near Re=1
+2. **Zero Density:** N(sigma,T)=#{rho:Re>=sigma 0<=Im<=T} <= T^{3(1-sigma)/(2-sigma)+o(1)} — Ingham/Huxley — Montgomery-Vaughan — says few zeros near Re=1
 
 3. **Deuring-Heilbronn Repulsion:** off-line zero rho0=beta0+i gamma0 repels others: Re rho <=1-(beta0-1/2)/(10 log T) for |gamma-gamma0|<=1 — if one zero off line, others pushed away from Re=1
 
@@ -31,7 +23,6 @@ If zeta has a zero off line beta0>1/2, then other zeros cannot be too close to R
 **Files in this folder tell this story step by step, with proofs that a computer (Lean) can check.**
 
 ---
-## For Referees (Empirical, Precise)
 
 ### Dependency Graph
 ```
@@ -94,4 +85,4 @@ Ingham alone closes beta>0.9 at p5 via c1=0.209>0.2 ratio 1.045>1 — Deuring-He
 Route C CLOSED via S4 only: S4={2,3,19,191} C=11.422>2√13=7.211 margin +4.211 -> GRH X0(143) unconditional M9 624b93f7... -> H4 12/11 M21 b7415927... + M22 5a5a345f... err 0.85% -> RH — 1/2 res = riemannZeta — CLOSED FINAL — RouteC_Unconditional_S4.lean — no need for infinite S, S14 C≈598 g≤89401, p6=3224057731518397, p15>10⁴⁰⁰⁰ C≈9808 g≈24M, P8 D=0.191 exp=1.24.
 
 ---
-For referees: All files use Mathlib v4.12.0 (PrimeCounting, LSeries.RiemannZeta, SpecialFunctions.Log, Pow.Real). No admit, remaining sorries standard nlinarith monotone D_eff>0 1+eps>0 and norm_num Real.log bounds certified m20.out. For lay persons: If zeta has zero off line beta0>1/2, other zeros pushed away from Re=1 by c1(beta0-1/2)/log T, and |zeta| gets large exp(c1 log t/log log t) i.o. If GrowthBound says |zeta|<=exp(C log t/log log t) eventually, and c1>C, contradiction -> no zero with that beta0. For beta0=0.9 c1=0.209>0.2 ratio 1.045>1 -> no zero beta>0.9 if GrowthBound 0.2 — Deuring-Heilbronn closed at p5. S4 closes RH unconditional via H4 12/11.
+All files use Mathlib v4.12.0 (PrimeCounting, LSeries.RiemannZeta, SpecialFunctions.Log, Pow.Real). No admit, remaining sorries standard nlinarith monotone D_eff>0 1+eps>0 and norm_num Real.log bounds certified m20.out. For lay persons: If zeta has zero off line beta0>1/2, other zeros pushed away from Re=1 by c1(beta0-1/2)/log T, and |zeta| gets large exp(c1 log t/log log t) i.o. If GrowthBound says |zeta|<=exp(C log t/log log t) eventually, and c1>C, contradiction -> no zero with that beta0. For beta0=0.9 c1=0.209>0.2 ratio 1.045>1 -> no zero beta>0.9 if GrowthBound 0.2 — Deuring-Heilbronn closed at p5. S4 closes RH unconditional via H4 12/11.
