@@ -2,40 +2,37 @@ import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 
-namespace RHRouteC.Littlewood
+namespace Littlewood
 
 open Filter
 
-/-- **Littlewood 1924 Ω-result (OPEN, ~20pp).**
-    Classical: |ζ(½+it)| = Ω(exp(c √(log t / log log t))) and in fact
-    Montgomery refined to Ω(exp(c log t / log log t)) under RH? 
-    Here we state the form needed for Route C: unconditional large values.
-
-    Titchmarsh §8.12, Theorem 8.12: For some c>0, |ζ(½+it)| ≥ exp(c√(log t / log log t))
-    infinitely often. Montgomery (1977) strengthens to exp(c log t / log log t) for S(t).
-
-    For Route C we use the stronger Montgomery form as OPEN:
-    ∃ c>0, ∀ B, ∃ t≥B, exp(c log t / log log t) ≤ |ζ(½+it)|
-
-    This ALONE falsifies GrowthBound C(log t)², no need for off-line zero.
-    STATUS: OPEN (~20pp, Littlewood 1924 + Montgomery 1977). -/
 def LittlewoodOmegaLowerBound_OPEN : Prop :=
   ∃ c : ℝ, 0 < c ∧ ∀ B : ℝ, ∃ t : ℝ, B ≤ t ∧ 1 < t ∧
     Real.exp (c * Real.log t / Real.log (Real.log t)) ≤ Complex.abs (riemannZeta (1 / 2 + (t : ℂ) * Complex.I))
 
-/-- **LittlewoodGrowthContradiction (PROVED, 0 sorry combinator).**
-    Littlewood Ω-result → ¬GrowthBound via exp_loglog_dominates_sq -/
-theorem littlewood_contradicts_growthbound
-    (hL : LittlewoodOmegaLowerBound_OPEN)
-    (hDom : ∀ C c₁ : ℝ, 0 < C → 0 < c₁ → ∀ᶠ t in atTop, C * (Real.log t) ^ 2 < Real.exp (c₁ * Real.log t / Real.log (Real.log t)))
-    : ¬ (∃ C : ℝ, 0 < C ∧ ∀ t : ℝ, 2 ≤ t → Complex.abs (riemannZeta (1 / 2 + (t : ℂ) * Complex.I)) ≤ C * (Real.log t) ^ 2) := by
-  intro ⟨C, hC, hB⟩
-  obtain ⟨c, hc, hOm⟩ := hL
-  have hDomC := hDom C c hC hc
-  rw [eventually_atTop] at hDomC
-  obtain ⟨T, hT⟩ := hDomC
-  obtain ⟨t, htB, _, htLarge⟩ := hOm (max (max T 2) 1)
-  have ht2 : 2 ≤ t := by linarith [le_max_right (max T 2) 1]
-  linarith [hB t ht2, hT t (by linarith [le_max_left T 2, le_max_left (max T 2) 1]), htLarge]
+/-- PROVED: calculus core that makes Littlewood contradict GrowthBound -/
+theorem exp_loglog_dominates_sq (C c₁ : ℝ) (hC : 0 < C) (hc₁ : 0 < c₁) :
+    ∀ᶠ t in atTop, C * (Real.log t) ^ 2 < Real.exp (c₁ * Real.log t / Real.log (Real.log t)) := by
+  have hexp2 : Tendsto (fun v : ℝ => Real.exp v / v ^ 2) atTop atTop := Real.tendsto_exp_div_pow_atTop 2
+  have hsub : Tendsto (fun v : ℝ => c₁ * (Real.exp v / v ^ 2) + (-2)) atTop atTop := tendsto_atTop_add_const_right atTop (-2 : ℝ) (hexp2.const_mul_atTop hc₁)
+  have hmul : Tendsto (fun v : ℝ => v * (c₁ * (Real.exp v / v ^ 2) + (-2))) atTop atTop := tendsto_id.atTop_mul_atTop hsub
+  have hcore : Tendsto (fun v : ℝ => c₁ * Real.exp v / v - 2 * v) atTop atTop := by refine hmul.congr' ?_; filter_upwards [eventually_gt_atTop (0 : ℝ)] with v hv; have hv' : v ≠ 0 := ne_of_gt hv; field_simp; ring
+  have hv_ineq : ∀ᶠ v in atTop, Real.log C + 2 * v < c₁ * Real.exp v / v := by filter_upwards [hcore.eventually_gt_atTop (Real.log C)] with v hv; linarith
+  have hloglog : Tendsto (fun t : ℝ => Real.log (Real.log t)) atTop atTop := Real.tendsto_log_atTop.comp Real.tendsto_log_atTop
+  have ht_ineq := hloglog.eventually hv_ineq
+  filter_upwards [ht_ineq, Real.tendsto_log_atTop.eventually_gt_atTop (0 : ℝ)] with t htin htpos
+  rw [Real.exp_log htpos] at htin
+  have hCsq : C * (Real.log t) ^ 2 = Real.exp (Real.log C + 2 * Real.log (Real.log t)) := by rw [Real.exp_add, Real.exp_log hC, two_mul, Real.exp_add, Real.exp_log htpos, ← pow_two]
+  rw [hCsq, Real.exp_lt_exp]; exact htin
 
-end RHRouteC.Littlewood
+def GrowthBound : Prop :=
+  ∃ C : ℝ, 0 < C ∧ ∀ t : ℝ, 2 ≤ t → Complex.abs (riemannZeta (1 / 2 + (t : ℂ) * Complex.I)) ≤ C * (Real.log t) ^ 2
+
+/-- PROVED: Littlewood OPEN → ¬GrowthBound — closes GrowthBound as false conditional -/
+theorem littlewood_closes_growthbound (hL : LittlewoodOmegaLowerBound_OPEN) : ¬GrowthBound := by
+  intro ⟨C, hC, hB⟩; obtain ⟨c, hc, hOm⟩ := hL
+  obtain ⟨Ta, hTa⟩ := eventually_atTop.mp (exp_loglog_dominates_sq C c hC hc)
+  obtain ⟨t, htB, _, htLarge⟩ := hOm (max (max Ta 2) 1)
+  linarith [hB t (by linarith [le_max_right (max Ta 2) 1]), hTa t (by linarith [le_max_left Ta 2, le_max_left (max Ta 2) 1]), htLarge]
+
+end Littlewood
