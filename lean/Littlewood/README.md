@@ -1,12 +1,6 @@
-# Littlewood Folder — Cathedral Door for Riemann Hypothesis Route C
-
-## For Everyone (Lay Person)
-
-**What is this folder trying to do?**
+# Littlewood Folder — Clerestory for Riemann Hypothesis Route C
 
 The Riemann Hypothesis (RH) says all non-trivial zeros of the zeta function ζ(s) lie on the critical line Re s = ½. Route C proves RH by contradiction: we assume there is a "Growth Bound" that says |ζ(½+it)| ≤ C (log t)² for all large t, and we show this bound is false. If GrowthBound is false and we also have a "Zero Repulsion" principle (zeros repel each other), then RH must be true.
-
-**How does Littlewood help?**
 
 In 1924, J.E. Littlewood proved that ζ(½+it) gets *huge* infinitely often — not just bigger than (log t)², but as big as exp(c log t / log log t), which is *vastly* larger than (log t)². This is called an Ω-result: ζ(½+it) = Ω(exp(...)), meaning it infinitely often exceeds that size.
 
