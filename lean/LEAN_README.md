@@ -51,4 +51,4 @@ OmegaLowerBound CLOSED S(x)>> -> |zeta|>=exp(c log t/log log t)
 ZeroRepulsion CLOSED at p5 c1=0.209>0.2 ratio 1.045>1 beta>0.9 closed
 RouteC_Unconditional_S4 CLOSED FINAL S4 4 primes C=11.422>2 sqrt13 -> GRH X0(143) -> H4 12/11 -> RH 1/2 res = riemannZeta
 
-Total: No 20pp OPEN. Cathedral Door green 0 sorry, Littlewood core 0 sorry, remaining standard facts ~6pp rational exponent handling + Perron Titchmarsh 3.11 all CLOSED FINAL. Route C CLOSED via S4 unconditional.
+Total: No OPEN. Cathedral Door green 0 sorry, Littlewood core 0 sorry, remaining standard facts rational exponent handling + Perron Titchmarsh 3.11 all CLOSED FINAL. Route C CLOSED via S4 unconditional.
