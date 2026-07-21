@@ -1,15 +1,5 @@
 import Mathlib
 
-/-!
-# rh-growth-contradiction — growthbound.lean — GENUINE FIXED GREEN FINAL
-Lean 4.12.0 · Mathlib v4.12.0 rev 809c3fb
-Fixes from your screenshot:
-- unknown identifier 'I' → add open Complex + use Complex.I
-- Tendsto.sqrt mismatch → use Real.tendsto_sqrt_atTop.comp
-- invalid field 'symm' on Eventually → use =ᶠ[atTop] + .congr
-Genuine: exp(c·√(log t / log log t)) dominates C·(log t)² via exp v / v³ →∞
--/
-
 namespace RHRouteC
 
 open Real Filter Complex
@@ -59,13 +49,16 @@ theorem exp_sqrt_loglog_dominates_sq_genuine (C c : ℝ) (hC : 0 < C) (hc : 0 < 
     rw [Real.exp_log hv_pos]
   have h1 : Real.log t / Real.log (Real.log t) = Real.exp (Real.log (Real.log t)) / Real.log (Real.log t) := by
     rw [h_log_eq]
-  have h2 : Real.sqrt (Real.log t / Real.log (Real.log t)) = Real.sqrt (Real.exp (Real.log (Real.log t)) / Real.log (Real.log t)) := by
+  have h_eq_sqrt : Real.sqrt (Real.exp (Real.log (Real.log t)) / Real.log (Real.log t)) = Real.sqrt (Real.log t / Real.log (Real.log t)) := by
     rw [h1]
+  have h_eq_c : c * Real.sqrt (Real.exp (Real.log (Real.log t)) / Real.log (Real.log t)) = c * Real.sqrt (Real.log t / Real.log (Real.log t)) := by
+    rw [h_eq_sqrt]
+  have h_ev' : Real.log C + 2 * Real.log (Real.log t) < c * Real.sqrt (Real.log t / Real.log (Real.log t)) := by
+    exact lt_of_lt_of_eq h_ev h_eq_c
   have hCsq : C * (Real.log t) ^ 2 = Real.exp (Real.log C + 2 * Real.log (Real.log t)) := by
     rw [Real.exp_add, Real.exp_log hC, two_mul, Real.exp_add, Real.exp_log hv_pos, ← pow_two]
   rw [hCsq, Real.exp_lt_exp]
-  calc Real.log C + 2 * Real.log (Real.log t) < c * Real.sqrt (Real.exp (Real.log (Real.log t)) / Real.log (Real.log t)) := h_ev
-    _ = c * Real.sqrt (Real.log t / Real.log (Real.log t)) := by rw [← h1, ← h2]
+  exact h_ev'
 
 theorem GrowthBound_is_FALSE_genuine (hL : LittlewoodOmega_OPEN) : ¬GrowthBound := by
   intro hG
