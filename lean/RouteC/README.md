@@ -1,14 +1,8 @@
 # RouteC — Bridge Littlewood → Bost-Connes — CLOSED via S4
 
-## For Everyone (Lay Person)
-
-**What is this folder trying to do?**
-
 RH says all non-trivial zeros of zeta lie on Re=1/2. Route C proves RH by contradiction: assume |zeta(1/2+it)| <= C(log t)^2 for large t. Littlewood 1924 proved this is false — zeta gets huge i.o. as big as exp(c sqrt(log t/log log t)), vastly larger than (log t)^2. So small bound false — green Cathedral Door.
 
 If GrowthBound false + zeros repel (Ingham), then RH true.
-
-**How does this folder close it?**
 
 We need only 4 exceptional primes: S4={2,3,19,191} — primes p where ||p·α0||<1/p for α0=299+π/10 — certified M4 b810a7a3... complete to 10^4000.
 
@@ -29,7 +23,6 @@ So Route C CLOSED via S4 only — not via S14 14 primes C≈598 g≤89401, not v
 Files tell story step by step with proofs Lean can check.
 
 ---
-## For Referees (Precise)
 
 ### Dependency Graph
 
