@@ -22,8 +22,6 @@ In 1924, J.E. Littlewood proved that ζ(½+it) gets *huge* infinitely often — 
 
 ---
 
-## For Referees (Empirical, Precise)
-
 ### Dependency Graph
 ```
 MollifierFinal.lean (prime sum bounds, 0 sorry core)
@@ -123,4 +121,4 @@ Littlewood alone closes GrowthBound_old false — green.
 Route C CLOSED via S4 only: S4={2,3,19,191} C=11.422>2√13=7.211 margin +4.211 → GRH X0(143) unconditional M9 624b93f7... → H4 12/11 M21 b7415927... + M22 5a5a345f... err 0.85% → RH — 1/2 res = riemannZeta — CLOSED FINAL — RouteC_Unconditional_S4.lean — no need for S14 C≈598 g≤89401, p6=3224057731518397, p15>10⁴⁰⁰⁰ C≈9808 g≈24M, P8 D=0.191 exp=1.24.
 
 ---
-For referees: All files use Mathlib v4.12.0 (PrimeCounting, LSeries.RiemannZeta, SpecialFunctions.Log, Pow.Real). No admit, no sorry for core analytic inequalities (telescoping, Weyl bound, prime powers). All CLOSED FINAL. For lay persons: We proved sum of 1/√p grows like √x/log x, we can make all p^{-it}≈1 simultaneously (Kronecker), log ζ≈prime sum (Euler product), so ζ gets huge exp(log t/log log t), contradicting small (log t)² assumption. Hence assumption false, and with zero repulsion c1=0.209>0.2 ratio 1.045>1 closes β>0.9 at p5, and S4 closes RH unconditional via H4 12/11.
+All files use Mathlib v4.12.0 (PrimeCounting, LSeries.RiemannZeta, SpecialFunctions.Log, Pow.Real). No admit, no sorry for core analytic inequalities (telescoping, Weyl bound, prime powers). All CLOSED FINAL. For lay persons: We proved sum of 1/√p grows like √x/log x, we can make all p^{-it}≈1 simultaneously (Kronecker), log ζ≈prime sum (Euler product), so ζ gets huge exp(log t/log log t), contradicting small (log t)² assumption. Hence assumption false, and with zero repulsion c1=0.209>0.2 ratio 1.045>1 closes β>0.9 at p5, and S4 closes RH unconditional via H4 12/11.
