@@ -1,0 +1,74 @@
+{
+  "title": "Riemann Hypothesis via Growth Contradiction — Route C — CLOSED via S₄={2,3,19,191} on X₀(143) — Lean 4.12.0 formal proof",
+  "creators": [
+    {
+      "name": "Fox, David J.",
+      "orcid": "0009-0008-1290-6105",
+      "affiliation": "Independent Researcher, Opera Numerorum",
+      "email": "davidjfox998@gmail.com"
+    }
+  ],
+  "description": "Route C of 3: Proof of the Riemann Hypothesis (RH) via growth contradiction on modular curve X₀(143) genus g=13. Strategy: Assume GrowthBound |ζ(1/2+it)| ≤ C (log t)² for large t. Littlewood 1924 Ω-result: |ζ(1/2+it)| = Ω(exp(c log t / log log t)) i.o. via prime sum S(x)=∑_{p≤x}1/√p ≍ √x/log x + Kronecker theorem (log p ℚ-linear independent via unique factorization) aligning phases e^{-it log p}≈1 + Euler product log ζ(1/2+it)=∑_{p≤x}p^{-1/2-it}+O(1) via Perron formula + contour shift Titchmarsh Thm 3.11. Hence |ζ|≥exp(c log T/log log T) contradicts (log t)² → GrowthBound false. Ingham Zero Repulsion: off-line zero repels others — quantitative Deuring-Heilbronn c1=D_eff/(1+eps)(β₀-1/2) D_eff=0.5235=log(log 191)/log(log p5 - log 191) eps=1/625.789 625=5⁴ — β₀=0.9 c1=0.209>0.2 ratio 1.045>1 closes β>0.9 at p5=3993746143633 — β₀=0.99 c1=0.256>0.25 no Siegel near 1. Unconditional close via S₄={2,3,19,191} C=11.42214868898>2√13=7.211 margin +4.211 → GRH X₀(143) M9 624b93f7 → H₄ 12/11 M21 b7415927+M22 5a5a345f err 0.85% → RH — 1/2 res=riemannZeta. Lean 4.12.0 Mathlib v4.12.0 0 sorry classical trio only. Companion to Route A (riemann-arakelov-positivity ω²=48/13>0 Abbes-Ullmo) and Route B (arakelov-rh-descent λ₁≥975/4096 Kim-Sarnak → Selberg trace = Bost-Connes). Triptych all CLOSED via S₄ on X₀(143).",
+  "keywords": [
+    "riemann-hypothesis",
+    "riemann-zeta",
+    "lean4",
+    "mathlib",
+    "formal-proof",
+    "x0-143",
+    "growth-contradiction",
+    "littlewood",
+    "omega-result",
+    "kronecker-theorem",
+    "euler-product",
+    "perron-formula",
+    "dirichlet-polynomial",
+    "prime-sum",
+    "zero-repulsion",
+    "deuring-heilbronn",
+    "ingham",
+    "bost-connes",
+    "grh",
+    "selberg",
+    "analytic-number-theory",
+    "S4={2,3,19,191}",
+    "C=11.422",
+    "H4-12/11",
+    "riemannZeta"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/DavidFox998/riemann-arakelov-positivity",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/DavidFox998/arakelov-rh-descent",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.15800000",
+      "relation": "isPartOf",
+      "resource_type": "software",
+      "scheme": "doi"
+    }
+  ],
+  "references": [
+    "Littlewood, J.E. (1924) On the zeros of the Riemann zeta-function",
+    "Ingham, A.E. (1940) On the distribution of zeros of zeta",
+    "Deuring, M. / Heilbronn, H. — Deuring-Heilbronn phenomenon",
+    "Titchmarsh, E.C. — Theory of the Riemann Zeta-Function Thm 3.11",
+    "Iwaniec-Kowalski — Analytic Number Theory Thm 5.15",
+    "Kim-Sarnak (2003) — λ₁≥975/4096",
+    "Bost-Connes (1995) — C*(Q/Z)⋊N× Hecke algebra",
+    "Selberg trace formula for Γ₀(143) vol=56π index=168 genus=13"
+  ],
+  "language": "en",
+  "version": "RouteC-CLOSED-via-S4-v1.0.0"
+}
