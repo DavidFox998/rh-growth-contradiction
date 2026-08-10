@@ -1,0 +1,17 @@
+{
+  "repo": "rh-growth-contradiction",
+  "url": "https://github.com/DavidFox998/rh-growth-contradiction",
+  "opera_pos": "4/19 — Route C — Growth Contradiction — CLOSED via S₄ — Act III",
+  "route": "C",
+  "weight": "Contradiction weight — different from A/B/D — proves RH by showing GrowthBound (log t)² is false via Littlewood Ω-result exp(c√(log t/log log t)) — hugeness repels zeros — same S₄ that creates desert in Route D creates hugeness here",
+  "S4": "{2,3,19,191} C=11.422 margin +4.211 over 2√13 M9 624b93f7 H4 12/11 M21 b7415927 M22 5a5a345f",
+  "four_voices": {
+    "A": "https://github.com/DavidFox998/riemann-arakelov-positivity — ω²=48/13>0 — simplest",
+    "B": "https://github.com/DavidFox998/arakelov-rh-descent — λ₁≥975/4096 — deepest — 35pp BC6",
+    "C": "https://github.com/DavidFox998/rh-growth-contradiction — THIS — exp dominates (log)² — most elementary",
+    "D": "https://github.com/DavidFox998/brothers-desert-proof — Dirichlet jitter ||p·α₀||<1/p + 35 brothers orbit → desert → self-duality → R=1/2 — Because of Dirichlet-measured jitter and orbit we can study zeta thus proving R=1/2"
+  },
+  "brain": "https://github.com/DavidFox998/zerobeacon",
+  "archive": "https://github.com/DavidFox998/pistus-theoria",
+  "orcid": "0009-0008-1290-6105"
+}
